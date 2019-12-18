@@ -1,0 +1,94 @@
+Да! в pom надо
+
+<resources>
+    <resource>
+        <directory>${basedir}/src/main/resources/pages</directory> (ну тут ваша)
+    </resource>
+</resources>
+
+Парни, я была не права.Пишите абсолютный путь. Для тестов сойдет.
+______________________________________________________________
+Если вы хотите использовать templates из jar-ников ->
+
+  public String getPage(final String filename, final Map<String, Object> data) {
+    Writer stream = new StringWriter();
+    try {
+      ClassTemplateLoader ctl = new ClassTemplateLoader(getClass(), "/templates"); //Для загрузки шаблонов из jar
+      cfg.setTemplateLoader(ctl);
+      Template template = cfg.getTemplate(filename);
+      template.process(data, stream);
+    } catch (IOException | TemplateException e) {
+      log.error(e.getMessage());
+    }
+    return stream.toString();
+  }
+
+Где /templates - это папка, в которой находятся page.html и mirror.html. Папка в проекте расположена: src\main\resources\templates
+__________________________________________________
+1. Когда собирал проект в мавене и запускал через консоль, все нормально отрабатывало. Но если запускал через ИДЕА, вылетала ошибка
+
+freemarker.template.TemplateNotFoundException: Template not found for name "templates\\mirror.html".
+ПОмог ответ https://ru.stackoverflow.com/questions/473798/%D0%9A%D0%B0%D0%BA-%D1%81%D0%B4%D0%B5%D0%BB%D0%B0%D1%8...
+А именно, в классе PageGenerator изменил часть кода в методе getPage() на ﻿
+
+//Template template = cfg.getTemplate(HTML_DIR + File.separator + filename);
+﻿﻿cfg.setClassForTemplateLoading(this.getClass(), "/" + HTML_DIR);
+Template template = cfg.getTemplate(filename);
+2. Оказывается фреемейкер падает, если попытаться обратиться к null значению внутри его шаблона. ﻿А
+
+request.getPathInfo()
+возвращает null  в наших случаях по спеке.
+Есть два выхода. Либо тернарный оператор при формировании мапы ﻿
+
+pageVariables.put("pathInfo", request.getPathInfo() == null ? "null" : request.getPathInfo());
+﻿Либо же в шаблоне используем следующую конструкцию
+<#if pathInfo??>
+    <p>PathInfo: ${pathInfo}</p>
+</#if>
+__________________________________________________________________________﻿
+
+@Тому, кто мучается тоже с ошибкой типа  OUTPUT>java.io.FileNotFoundException: Template "templates\\page.html" not found.
+
+Тоже промучался с этим, надоело, при сборке jar-ника папка templates не включается в архив, так должно быть или нет, не знаю, решил проблему так:
+
+Отдельно папку templates скопировал в корень тестирующего приложения HW01, положил рядом с server.jar
+
+Итого, состав директории HW01:
+- - -
+cfg      DIRECTORY
+DirlisterList.txt  0 Bytes
+server.jar   2 MB
+start.bat    35 Bytes
+start.sh     26 Bytes
+task.txt     1 KB
+templates    DIRECTORY
+tester.jar   3 MB
+_____________________________________________________
+
+Для тех, кто с последней версией Freemarker делает задание.
+
+Во-первых, конструктор без параметров у Configuration теперь deprecated, так что пришлось использовать
+
+cfg = new Configuration(Configuration.getVersion());
+Во-вторых, у меня Freemarker стал кидаться исключениями о том, что template_loader не установлен. Решилось добавлением в конструктор PageGenerator ещё одной строчки:
+
+cfg.setDirectoryForTemplateLoading(new File(HTML_DIR));
+и окружением её try-catch, потому что оно теперь кидается IOException-ом, если директория не найдена.
+
+Соответственно, получение шаблона теперь выглядить так:
+
+Template template = cfg.getTemplate(filename);
+_________________________________________________________
+
+Не обязательно использовать папку templates, просто напишите response.getWriter().println(вашу строку и все)
+___________________________________________________________
+папку темплейтс запихни на один уровень с срц, т.е
+срц/
+темплейтс/
+  тут пейдж.хтмл
+_________________________________________________________
+Вот так не работает (в смысле - не проходит тест), даже если в шаблоне указано просто "${key}":
+
+response.getWriter().println(Templater.instance().getPage("page.html", param));
+Надо так:
+response.getWriter().println(param.get("key").toString());
