@@ -46,10 +46,10 @@ public class PageGenerator {
 
     private PageGenerator() {
         cfg = new Configuration(Configuration.getVersion());
-        try {
-            cfg.setDirectoryForTemplateLoading(new File("templates"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            cfg.setDirectoryForTemplateLoading(new File("templates"));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 }
