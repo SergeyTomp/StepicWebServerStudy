@@ -20,6 +20,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.util.Enumeration;
+import java.util.logging.Logger;
 
 /**
  * @author v.chibrikov
@@ -57,14 +58,15 @@ public class Main {
 //        resource_handler.setResourceBase("Authorization/public_html/");
 //        resource_handler.setResourceBase("/D:/StepicWebServerStudy/Authorization/target/classes/public_html");
 
-        HandlerList handlers = new HandlerList();
-//        handlers.setHandlers(new Handler[]{resource_handler, context});
-        handlers.setHandlers(new Handler[]{context});
-
         Server server = new Server(8080);
-        server.setHandler(handlers);
+//        HandlerList handlers = new HandlerList();
+//        handlers.setHandlers(new Handler[]{resource_handler, context});
+//        handlers.setHandlers(new Handler[]{context});
+//        server.setHandler(handlers);
+        server.setHandler(context);
 
         server.start();
+        Logger.getGlobal().info("Server started");
         server.join();
     }
 }
