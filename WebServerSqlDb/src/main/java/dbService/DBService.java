@@ -5,9 +5,9 @@ import dbService.dataSets.UsersDataSet;
 import org.h2.jdbcx.JdbcDataSource;
 
 import java.sql.Connection;
-import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.List;
 
 /**
  * @author v.chibrikov
@@ -23,20 +23,34 @@ public class DBService {
         this.connection = getH2Connection();
     }
 
-    public UsersDataSet getUser(long id) throws DBException {
+    public Connection getConnection() {
+        return connection;
+    }
+
+    public UsersDataSet getUserById(long id) throws DBException {
         try {
-            return (new UsersDAO(connection).get(id));
+            return (new UsersDAO(connection).getUserById(id));
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new DBException(e);
         }
     }
 
-    public long addUser(String name) throws DBException {
+    public List<UsersDataSet> getUsersByName(String name) throws DBException {
+        try {
+            return (new UsersDAO(connection).getAllByName(name));
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new DBException(e);
+        }
+    }
+
+    public long addUser(String name, String password) throws DBException {
         try {
             connection.setAutoCommit(false);
             UsersDAO dao = new UsersDAO(connection);
             dao.createTable();
-            dao.insertUser(name);
+            dao.insertUser(name, password);
             connection.commit();
             return dao.getUserId(name);
         } catch (SQLException e) {

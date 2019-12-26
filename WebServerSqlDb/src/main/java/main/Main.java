@@ -1,11 +1,9 @@
 package main;
 
 
-import dbService.DBException;
-import dbService.DBService;
-import dbService.dataSets.UsersDataSet;
 import accounts.AccountService;
-import accounts.UserProfile;
+import dbService.DBService;
+import dbService.dao.UsersDAO;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.ServletContextHandler;
@@ -21,6 +19,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.Objects;
 
 /**
@@ -35,22 +34,28 @@ public class Main {
 
         DBService dbService = new DBService();
         dbService.printConnectInfo();
+//        try {
+//            long userId = dbService.addUser("test");
+//            System.out.println("Added user id: " + userId);
+//
+//            UsersDataSet dataSet = dbService.getUserById(userId);
+//            System.out.println("User data set: " + dataSet);
+
+//            dbService.cleanUp();
+//        } catch (DBException e) {
+//            e.printStackTrace();
+//        }
+
         try {
-            long userId = dbService.addUser("test");
-            System.out.println("Added user id: " + userId);
-
-            UsersDataSet dataSet = dbService.getUser(userId);
-            System.out.println("User data set: " + dataSet);
-
-            dbService.cleanUp();
-        } catch (DBException e) {
+            new UsersDAO(dbService.getConnection()).createTable();
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        AccountService accountService = new AccountService();
+        AccountService accountService = new AccountService(dbService);
 
-        accountService.addNewUser(new UserProfile("admin"));
-        accountService.addNewUser(new UserProfile("test"));
+//        accountService.addNewUser(new UserProfile("admin"));
+//        accountService.addNewUser(new UserProfile("test"));
 
         ClassLoader cl  = Main.class.getClassLoader();
         URL f = cl.getResource("public_html/");

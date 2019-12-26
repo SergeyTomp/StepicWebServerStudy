@@ -1,6 +1,11 @@
 package accounts;
 
+import dbService.DBException;
+import dbService.DBService;
+import dbService.dataSets.UsersDataSet;
+
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -11,21 +16,31 @@ import java.util.Map;
  *         Описание курса и лицензия: https://github.com/vitaly-chibrikov/stepic_java_webserver
  */
 public class AccountService {
-    private final Map<String, UserProfile> loginToProfile;
+
     private final Map<String, UserProfile> sessionIdToProfile;
+    private DBService dbService;
 
-    public AccountService() {
-        loginToProfile = new HashMap<>();
+    public AccountService(DBService dbService) {
         sessionIdToProfile = new HashMap<>();
+        this.dbService = dbService;
     }
 
-    public void addNewUser(UserProfile userProfile) {
-        loginToProfile.put(userProfile.getLogin(), userProfile);
+    public void addNewUser(UserProfile userProfile) throws DBException {
+        dbService.addUser(userProfile.getLogin(), userProfile.getPass());
     }
 
-    public UserProfile getUserByLogin(String login) {
-        return loginToProfile.get(login);
+    // используем упрощённую реализацию метода, только для теста - там не важен пароль, а запись будет только одна
+    public UserProfile getUserByLogin(String login) throws DBException {
+
+        UserProfile profile = null;
+        List<UsersDataSet> usersDataSets = dbService.getUsersByName(login);
+        if (!usersDataSets.isEmpty()) {
+            UsersDataSet user = usersDataSets.get(0);
+            profile = new UserProfile(user.getName(), user.getPassword(), user.getName());
+        }
+        return profile;
     }
+
 
     public UserProfile getUserBySessionId(String sessionId) {
         return sessionIdToProfile.get(sessionId);
