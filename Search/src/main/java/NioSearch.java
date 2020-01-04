@@ -9,17 +9,17 @@ import java.nio.file.StandardOpenOption;
 
 public class NioSearch {
 
-    public static void main(String[] args) throws IOException {
-        if (args.length != 2) {
-            throw new IllegalArgumentException();
-        }
-        String grepfor = args[0];
-        Path path = Paths.get(args[1]);
-
-        String report = searchFor(grepfor, path);
-        System.out.println(report);
-
-    }
+//    public static void main(String[] args) throws IOException {
+//        if (args.length != 2) {
+//            throw new IllegalArgumentException();
+//        }
+//        String grepfor = args[0];
+//        Path path = Paths.get(args[1]);
+//
+//        String report = searchFor(grepfor, path);
+//        System.out.println(report);
+//
+//    }
 
     private static final int MAPSIZE = 4 * 1024 ; // 4K - make this * 1024 to 4MB in a real system.
 
