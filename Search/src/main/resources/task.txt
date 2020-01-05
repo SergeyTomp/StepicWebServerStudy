@@ -67,8 +67,8 @@ public class​ Main {
 
 Примерный план
 
-Вычитываем пути к файлам, делаем Set<Path>, передаём в Memoriser.
-Memoriser:
+Вычитываем пути к файлам, делаем Set<Path>, передаём в SimpleMemoriser.
+SimpleMemoriser:
 - разбивает сет по потокам и по ядрам
 - потоки набивают ConcurrentHashMap words <(слово), (HashSet<Path>, где слово нашлось)>, значение именно HashSet, чтобы было проще ибежать дублей Path
 - по готовности мапы запускает Searcher

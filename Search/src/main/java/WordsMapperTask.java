@@ -7,9 +7,9 @@ import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.BlockingQueue;
 
-public class WordsMapperTask implements WordsMapper {
+public class WordsMapperTask implements WordsMapper<Map<String, Set<Path>>> {
 
-    Map<String, Set<Path>> wordsMap;
+    private Map<String, Set<Path>> wordsMap;
     private final BlockingQueue<Path> pathsQueue;
     private final Path lastPath;
 
@@ -47,4 +47,5 @@ public class WordsMapperTask implements WordsMapper {
         }
         return wordsMap;
     }
+
 }

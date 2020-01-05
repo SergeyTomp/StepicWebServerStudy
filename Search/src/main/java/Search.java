@@ -1,3 +1,5 @@
+import interfaces.Ranger;
+
 import java.io.IOException;
 import java.net.FileNameMap;
 import java.net.URLConnection;
@@ -39,51 +41,53 @@ public class Search {
                 }
             }
         });
-        if (pathsList.size() == 0) {
-            System.err.println("No files specified, exit application");
-            System.exit(0);
-        }
 
         if (pathsList.size() == 0) {
             System.err.println("No text files found, exit application");
             System.exit(0);
         }
 
-        Map<String, Set<Path>> wordsMap = new HashMap<>();
-        Path lastPath = Paths.get("last");
-        pathsQueue.add(lastPath);
+//        Map<String, Set<Path>> wordsMap = new HashMap<>();
+//        Path lastPath = Paths.get("last");
+//        pathsQueue.add(lastPath);
+//
+//        int cpus = Runtime.getRuntime().availableProcessors();
+//        ExecutorService pool = Executors.newFixedThreadPool(cpus);
+//        List<Future<Map<String, Set<Path>>>> futures = new ArrayList<>();
+//
+//        for (int i = 0; i < cpus; i++) {
+//            futures.add(pool.submit(new WordsMapperTask(pathsQueue, lastPath)));
+//        }
+//
+//        for (Future<Map<String, Set<Path>>> future : futures){
+//            try {
+//                future.get().forEach((key, value) -> {
+//                    wordsMap.computeIfAbsent(key, k -> new HashSet<>());
+//                    wordsMap.get(key).addAll(value);
+//                });
+//            } catch (InterruptedException | ExecutionException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        pool.shutdown();
+//        pathsQueue.clear();
+//        wordsMap.forEach((key, value) -> System.out.println(key + " " + Arrays.toString(value.toArray())));
+//        System.out.println("Files found for processing:");
+//        pathsList.forEach(p -> System.out.println(p.getFileName()));
+//        System.out.println("Type the sequence and press Enter for processing or Ctrl+C to exit application");
+//        Scanner sc = new Scanner(System.in);
+//        System.out.println(" > ");
 
-        int cpus = Runtime.getRuntime().availableProcessors();
-        ExecutorService pool = Executors.newFixedThreadPool(cpus);
-        List<Future<Map<String, Set<Path>>>> futures = new ArrayList<>();
-
-        for (int i = 0; i < cpus; i++) {
-            futures.add(pool.submit(new WordsMapperTask(pathsQueue, lastPath)));
-        }
-
-        for (Future<Map<String, Set<Path>>> future : futures){
-            try {
-                future.get().forEach((key, value) -> {
-                    wordsMap.computeIfAbsent(key, k -> new HashSet<>());
-                    wordsMap.get(key).addAll(value);
-                });
-            } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
-            }
-        }
-        pool.shutdown();
-        pathsQueue.clear();
-        wordsMap.forEach((key, value) -> System.out.println(key + " " + Arrays.toString(value.toArray())));
         System.out.println("Files found for processing:");
         pathsList.forEach(p -> System.out.println(p.getFileName()));
+        Ranger ranger = new SimpleMemoriser(pathsList).memorise();
         System.out.println("Type the sequence and press Enter for processing or Ctrl+C to exit application");
+        System.out.print(" > ");
         Scanner sc = new Scanner(System.in);
-        System.out.println(" > ");
+        while (sc.hasNext()) {
+            ranger.range(sc.nextLine());
+            System.out.print(" > ");
+        }
 
-//        String lineToSearch;
-//        while (!(lineToSearch = sc.next().trim()).isEmpty()) {
-//            System.err.println(line.indexOf(lineToSearch));
-//            System.err.print("> ");
-//        }
     }
 }
