@@ -14,9 +14,11 @@ import java.util.stream.Collectors;
 public class SimpleMemoriser implements Memoriser {
 
     private List<Path> pathList;
+    private final long limit;
 
-    public SimpleMemoriser(List<Path> pathList) {
+    public SimpleMemoriser(List<Path> pathList, long limit) {
         this.pathList = pathList;
+        this.limit = limit;
     }
 
     @Override
@@ -30,8 +32,11 @@ public class SimpleMemoriser implements Memoriser {
         pathsQueue.add(lastPath);
 
         for (int i = 0; i < cpus; i++) {
+
             futures.add(pool.submit((WordsMapper<Map<String, Set<Path>>>) () -> {
+
                 Map<String, Set<Path>> wordsMap = new HashMap<>();
+
                 while ((!Thread.currentThread().isInterrupted())) {
 
                     Path path = pathsQueue.take();
@@ -59,6 +64,7 @@ public class SimpleMemoriser implements Memoriser {
             }));
         }
         Map<String, Set<Path>> wordsMap = new HashMap<>();
+
         futures.forEach(future -> {
             try {
                 future.get().forEach((key, value) -> {
@@ -69,44 +75,39 @@ public class SimpleMemoriser implements Memoriser {
                 e.printStackTrace();
             }
         });
+
         pool.shutdown();
         pathsQueue.clear();
 
         return (string) -> {
 
             Map<String, Integer> rangesMap = new HashMap<>();
+
             Set<String> wordsSet = Arrays.stream(string
                     .toLowerCase()
                     .replaceAll("\\p{Punct}", " ")
                     .split("\\s+")).collect(Collectors.toCollection(HashSet::new));
+
             int weight = Math.round(100f / wordsSet.size());
+
+            pathList.forEach(path -> rangesMap.put(path.getFileName().toString(), 0));
+
             wordsSet.forEach(word ->
                     wordsMap.get(word).forEach(path -> {
                         String fileName = path.getFileName().toString();
                         rangesMap.merge(fileName, weight, (int1, int2) -> int1 + weight);
                     }));
+
             StringBuilder sb = new StringBuilder();
-//            rangesMap.entrySet().stream().sorted((o1, o2) -> o2.getValue() - o1.getValue()).forEach(es ->
-//                    System.out.println(es.getKey() + ": " + es.getValue() + "%"));
 
-            rangesMap.entrySet().stream().sorted((o1, o2) -> o2.getValue() - o1.getValue()).forEach(es ->
+            rangesMap.entrySet()
+                    .stream()
+                    .sorted((o1, o2) -> o2.getValue() - o1.getValue())
+                    .limit(limit)
+                    .forEach(es ->
                     sb.append(es.getKey()).append(": ").append(es.getValue()).append("%").append("\n"));
+
             System.out.println(sb.toString());
-//            System.out.print(" > ");
-
-//            Arrays.stream(string
-//                    .toLowerCase()
-//                    .replaceAll("\\p{Punct}", " ")
-//                    .split("\\s+"))
-//                    .filter(s -> !s.isEmpty())
-//                    .forEach(word ->
-//                            wordsMap.get(word).forEach(path -> {
-//                        String fileName = path.getFileName().toString();
-//                        rangesMap.merge(fileName, 1, (integer, integer2) -> integer + integer2);
-//                            rangesMap.putIfAbsent(fileName, 1);
-//                            rangesMap.put(fileName, rangesMap.get(fileName) + 1);
-//                    }));
-
         };
     }
 }

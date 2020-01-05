@@ -15,7 +15,7 @@ public class Application {
 
         Ranger ranger = memoriser.memorise();
         Scanner sc = new Scanner(System.in);
-        System.out.println("Type the sequence and press Enter for processing or Ctrl+C to exit application");
+        System.out.println("Type the sequence and press Enter for searching or Ctrl+C to exit application");
         System.out.print("search > ");
         while (sc.hasNext()) {
             ranger.range(sc.nextLine());

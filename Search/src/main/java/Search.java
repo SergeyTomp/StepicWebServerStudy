@@ -41,8 +41,9 @@ public class Search {
             System.exit(0);
         }
 
+        final long LIMIT = 10;
         System.out.println("Files found for processing:");
         pathsList.forEach(p -> System.out.println(p.getFileName()));
-        new Application(new SimpleMemoriser(pathsList)).start();
+        new Application(new SimpleMemoriser(pathsList, LIMIT)).start();
     }
 }
