@@ -19,8 +19,8 @@ public class SimpleMemoriser implements Memoriser {
     private final long limit;
 
     public SimpleMemoriser(@NotNull List<Path> pathList, long limit) {
-        if(limit < 0) throw new IllegalArgumentException("List LIMIT can not be negative");
         this.pathList = pathList;
+        if(limit < 0) throw new IllegalArgumentException("List LIMIT can not be negative");
         this.limit = limit;
     }
 

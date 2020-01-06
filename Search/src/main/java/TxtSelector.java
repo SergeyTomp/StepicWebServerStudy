@@ -17,9 +17,11 @@ public class TxtSelector implements Selector {
     private String[] args;
     private String fileType;
 
-    public TxtSelector(@NotNull String[] args, @NotNull String fileType) {
+    public TxtSelector(@NotNull String[] args, @NotNull Mime fileType) {
+        assert args.length != 0;
+        assert fileType != null;
         this.args = args;
-        this.fileType = fileType;
+        this.fileType = fileType.getFileType();
     }
 
     @Override

@@ -6,7 +6,7 @@ public class Search {
     public static void main(String[] args) {
 
         //TODO: constants below could be placed in Properties
-        final String FILE_TYPE = "text/plain";
+        final Mime FILE_TYPE = Mime.TEXT_PLAIN;
         final long LIMIT = 10;
 
         if (args.length == 0) {

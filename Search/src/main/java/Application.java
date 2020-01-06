@@ -9,6 +9,7 @@ public class Application {
     private Memoriser memoriser;
 
     public Application(@NotNull Memoriser memoriser) {
+        assert memoriser != null;
         this.memoriser = memoriser;
     }
 
