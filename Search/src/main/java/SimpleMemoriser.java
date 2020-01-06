@@ -98,16 +98,22 @@ public class SimpleMemoriser implements Memoriser {
                         rangesMap.merge(fileName, weight, (int1, int2) -> int1 + weight);
                     }));
 
-            StringBuilder sb = new StringBuilder();
+//            StringBuilder sb = new StringBuilder();
+//
+//            rangesMap.entrySet()
+//                    .stream()
+//                    .sorted((o1, o2) -> o2.getValue() - o1.getValue())
+//                    .limit(limit)
+//                    .forEach(es ->
+//                    sb.append(es.getKey()).append(": ").append(es.getValue()).append("%").append("\n"));
+//
+//            System.out.println(sb.toString());
 
-            rangesMap.entrySet()
+            return rangesMap.entrySet()
                     .stream()
                     .sorted((o1, o2) -> o2.getValue() - o1.getValue())
                     .limit(limit)
-                    .forEach(es ->
-                    sb.append(es.getKey()).append(": ").append(es.getValue()).append("%").append("\n"));
-
-            System.out.println(sb.toString());
+                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (i1, i2) -> i2, LinkedHashMap::new));
         };
     }
 }

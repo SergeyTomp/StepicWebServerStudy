@@ -1,6 +1,8 @@
 package interfaces;
 
+import java.util.Map;
+
 public interface Ranger {
 
-    void range(String string);
+    Map<String, Integer> range(String string);
 }
