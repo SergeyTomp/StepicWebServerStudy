@@ -1,6 +1,7 @@
 import interfaces.Memoriser;
 import interfaces.Ranger;
 import interfaces.WordsMapper;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -10,15 +11,24 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class SimpleMemoriser implements Memoriser {
 
     private List<Path> pathList;
     private final long limit;
 
-    public SimpleMemoriser(List<Path> pathList, long limit) {
+    public SimpleMemoriser(@NotNull List<Path> pathList, long limit) {
+        if(limit < 0) throw new IllegalArgumentException("List LIMIT can not be negative");
         this.pathList = pathList;
         this.limit = limit;
+    }
+
+    private Stream<String> getClearedStream(String s) {
+
+        return Arrays.stream(s.toLowerCase()
+                .replaceAll("\\p{Punct}", " ")
+                .split("\\s+"));
     }
 
     @Override
@@ -48,9 +58,7 @@ public class SimpleMemoriser implements Memoriser {
 
                     try(BufferedReader br = new BufferedReader(new FileReader(path.toFile()))) {
 
-                        br.lines().flatMap(s -> Arrays.stream(s.toLowerCase()
-                                .replaceAll("\\p{Punct}", " ")
-                                .split("\\s+")))
+                        br.lines().flatMap(this::getClearedStream)
                                 .filter(s -> !s.isEmpty())
                                 .forEach(s -> {
                                     wordsMap.computeIfAbsent(s, k -> new HashSet<>());
@@ -83,10 +91,9 @@ public class SimpleMemoriser implements Memoriser {
 
             Map<String, Integer> rangesMap = new HashMap<>();
 
-            Set<String> wordsSet = Arrays.stream(string
-                    .toLowerCase()
-                    .replaceAll("\\p{Punct}", " ")
-                    .split("\\s+")).collect(Collectors.toCollection(HashSet::new));
+            Set<String> wordsSet = getClearedStream(string)
+                    .filter(s -> !s.isEmpty())
+                    .collect(Collectors.toCollection(HashSet::new));
 
             int weight = Math.round(100f / wordsSet.size());
 

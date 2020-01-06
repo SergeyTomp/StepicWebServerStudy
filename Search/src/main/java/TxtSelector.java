@@ -1,4 +1,5 @@
 import interfaces.Selector;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.net.FileNameMap;
@@ -16,7 +17,7 @@ public class TxtSelector implements Selector {
     private String[] args;
     private String fileType;
 
-    public TxtSelector(String[] args, String fileType) {
+    public TxtSelector(@NotNull String[] args, @NotNull String fileType) {
         this.args = args;
         this.fileType = fileType;
     }

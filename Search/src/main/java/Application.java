@@ -1,5 +1,6 @@
 import interfaces.Memoriser;
 import interfaces.Ranger;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Scanner;
 
@@ -7,7 +8,7 @@ public class Application {
 
     private Memoriser memoriser;
 
-    public Application(Memoriser memoriser) {
+    public Application(@NotNull Memoriser memoriser) {
         this.memoriser = memoriser;
     }
 
