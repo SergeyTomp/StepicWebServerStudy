@@ -1,5 +1,5 @@
-import java.nio.file.Path;
-import java.util.List;
+import interfaces.Memoriser;
+import interfaces.Selector;
 
 public class Search {
 
@@ -14,15 +14,9 @@ public class Search {
             System.exit(0);
         }
 
-        List<Path> pathsList = new TxtSelector(args).select();
+        Selector selector = new TxtSelector(args, FILE_TYPE);
+        Memoriser memoriser = new SimpleMemoriser();
 
-        if (pathsList.size() == 0) {
-            System.err.println("No text files found, please try again, exit application!");
-            System.exit(0);
-        }
-
-        System.out.println("Files found for processing:");
-        pathsList.forEach(p -> System.out.println(p.getFileName()));
-        new Application(new SimpleMemoriser(pathsList, LIMIT)).start();
+        new Application(memoriser, selector, LIMIT).start();
     }
 }

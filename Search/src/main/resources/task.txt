@@ -64,22 +64,3 @@ public class​ Main {
         }
     }
 }
-
-Примерный план
-
-Вычитываем пути к файлам, делаем Set<Path>, передаём в SimpleMemoriser.
-SimpleMemoriser:
-- разбивает сет по потокам и по ядрам
-- потоки набивают ConcurrentHashMap words <(слово), (HashSet<Path>, где слово нашлось)>, значение именно HashSet, чтобы было проще ибежать дублей Path
-- по готовности мапы запускает Searcher
-
-Searcher:
-- запускает сканнер, печатает приглашение
-- принимает строку
-- разбивает на слова
-- создаёт объекты по интерфейсу Ranger implements Comparable<> с полями Path и int count
-- делает ConcurrentArrayList<Ranger> counts
-- для каждого слова достаёт Set<Path> из words
-- пробегает по нему и обновляет count в соответствующих Ranger в counts
-- сортирует по убыванию счётчика в Ranger
-- выводит первые 10

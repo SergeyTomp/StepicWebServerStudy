@@ -13,7 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /** Demonstration example of Selector interface instantiation with Mime fileType set via initialisation.
- * For flexibility Mime fileType might be set every time after Selector instance is created, also could be final for immutability */
+ * For flexibility Mime fileType could be set after Selector instance is created */
 public class TxtSelector implements Selector {
 
     private String[] args;

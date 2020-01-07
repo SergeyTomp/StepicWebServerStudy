@@ -16,11 +16,23 @@ import java.util.stream.Stream;
 public class SimpleMemoriser implements Memoriser {
 
     private List<Path> pathList;
-    private final long limit;
+    private long limit;
 
     public SimpleMemoriser(@NotNull List<Path> pathList, long limit) {
         this.pathList = pathList;
         if(limit < 0) throw new IllegalArgumentException("List LIMIT can not be negative");
+        this.limit = limit;
+    }
+
+    public SimpleMemoriser(){}
+
+    @Override
+    public void setPathList(List<Path> pathList) {
+        this.pathList = new ArrayList<>(pathList);
+    }
+
+    @Override
+    public void setLimit(long limit) {
         this.limit = limit;
     }
 

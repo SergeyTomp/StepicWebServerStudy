@@ -6,5 +6,7 @@ public class ApplicationTest {
     public void applicationCreation() {
 
         new Application(null);
+        new Application(new SimpleMemoriser(), null, 10);
+        new Application(new SimpleMemoriser(), new TxtSelector(new String[10]), 0);
     }
 }
