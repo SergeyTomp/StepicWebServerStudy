@@ -14,7 +14,7 @@ import java.util.Map;
 
 public class SimpleMemoriserTest {
 
-    @Test (expected = IllegalArgumentException.class)
+    @Test (expected = AssertionError.class)
     public void testPathListNullability() {
         new SimpleMemoriser(null, 10);
     }

@@ -16,13 +16,14 @@ public class Application {
     private long LIMIT;
 
     public Application(@NotNull Memoriser memoriser) {
+        assert memoriser != null;
         this.memoriser = memoriser;
     }
 
     public Application(@NotNull Memoriser memoriser, @NotNull Selector selector, long LIMIT) {
         this.memoriser = memoriser;
         this.selector = selector;
-        assert LIMIT != 0;
+        if (LIMIT < 0) { throw new IllegalArgumentException("LIMIT can't be zero or negative"); }
         this.LIMIT = LIMIT;
     }
 

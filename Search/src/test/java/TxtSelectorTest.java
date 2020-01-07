@@ -53,7 +53,7 @@ public class TxtSelectorTest {
         }
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = AssertionError.class)
     public void testSelectorNullArray() {
 
         new TxtSelector(null);

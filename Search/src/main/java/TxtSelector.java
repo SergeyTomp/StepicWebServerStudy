@@ -21,7 +21,7 @@ public class TxtSelector implements Selector {
     private Mime fileType = Mime.TEXT_PLAIN;
 
     public TxtSelector(@NotNull String[] args) {
-        assert args.length != 0;
+        assert args != null;
         this.args = args;
     }
 
