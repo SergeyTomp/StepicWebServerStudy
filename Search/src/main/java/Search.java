@@ -14,7 +14,7 @@ public class Search {
             System.exit(0);
         }
 
-        List<Path> pathsList = new TxtSelector(args, FILE_TYPE).select();
+        List<Path> pathsList = new TxtSelector(args).select();
 
         if (pathsList.size() == 0) {
             System.err.println("No text files found, please try again, exit application!");

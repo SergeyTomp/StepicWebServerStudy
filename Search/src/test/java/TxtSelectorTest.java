@@ -29,10 +29,12 @@ public class TxtSelectorTest {
             file2 = Files.createFile(path2);
 
             final String[] path = {PATH_TO_DIR};
-            List<Path> select = new TxtSelector(path, Mime.TEXT_PLAIN).select();
+            List<Path> select = new TxtSelector(path).select();
             assert select.size() == 2;
 
-            select = new TxtSelector(path, Mime.TEXT_CSV).select();
+            TxtSelector selector = new TxtSelector(path);
+            selector.setFileType(Mime.TEXT_CSV);
+            select = selector.select();
             assert select.size() == 0;
 
             Files.deleteIfExists(file1);
@@ -54,9 +56,6 @@ public class TxtSelectorTest {
     @Test(expected = IllegalArgumentException.class)
     public void testSelectorNullArray() {
 
-        new TxtSelector(null, Mime.TEXT_PLAIN);
-        new TxtSelector(new String[10], null);
-        new TxtSelector(new String[0], Mime.TEXT_PLAIN);
-        new TxtSelector(new String[0], null);
+        new TxtSelector(null);
     }
 }

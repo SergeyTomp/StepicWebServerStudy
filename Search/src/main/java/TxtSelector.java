@@ -12,16 +12,26 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/** Demonstration example of Selector interface instantiation with Mime fileType set via initialisation.
+ * For flexibility Mime fileType might be set every time after Selector instance is created, also could be final for immutability */
 public class TxtSelector implements Selector {
 
     private String[] args;
-    private String fileType;
+    @NotNull
+    private Mime fileType = Mime.TEXT_PLAIN;
+
+    public TxtSelector(@NotNull String[] args) {
+        assert args.length != 0;
+        this.args = args;
+    }
 
     public TxtSelector(@NotNull String[] args, @NotNull Mime fileType) {
-        assert args.length != 0;
-        assert fileType != null;
         this.args = args;
-        this.fileType = fileType.getFileType();
+        this.fileType = fileType;
+    }
+
+    public void setFileType(@NotNull Mime fileType) {
+        this.fileType = fileType;
     }
 
     @Override
@@ -35,7 +45,7 @@ public class TxtSelector implements Selector {
                 try {
                     Files.newDirectoryStream(path).forEach(f -> {
                         String type = fileNameMap.getContentTypeFor(f.toUri().toString());
-                        if ((!Files.isDirectory(f)) && type != null && type.contains(fileType)) {
+                        if ((!Files.isDirectory(f)) && type != null && type.contains(fileType.getFileType())) {
                             pathsList.add(f);
                         }
                     });
