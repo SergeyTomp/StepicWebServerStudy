@@ -1,7 +1,5 @@
 import org.junit.Test;
 
-import java.io.ByteArrayOutputStream;
-
 public class SearchTest {
 
     @Test(expected = IllegalArgumentException.class)
@@ -10,10 +8,4 @@ public class SearchTest {
         new Application(new SimpleMemoriser(), null, 10).start();
         new Application(new SimpleMemoriser(), new TxtSelector(new String[10]), 0).start();
     }
-
-
-//    ByteArrayOutputStream err = new ByteArrayOutputStream();
-//
-//    System.setErr(new PrintStream(err));
-//    System.err.println("Out was: " + err.toString());
 }
