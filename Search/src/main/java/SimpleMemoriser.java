@@ -112,21 +112,10 @@ public class SimpleMemoriser implements Memoriser {
             pathList.forEach(path -> rangesMap.put(path.getFileName().toString(), 0));
 
             wordsSet.forEach(word ->
-                    wordsMap.get(word).forEach(path -> {
-                        String fileName = path.getFileName().toString();
-                        rangesMap.merge(fileName, weight, (int1, int2) -> int1 + weight);
-                    }));
-
-//            StringBuilder sb = new StringBuilder();
-//
-//            rangesMap.entrySet()
-//                    .stream()
-//                    .sorted((o1, o2) -> o2.getValue() - o1.getValue())
-//                    .limit(limit)
-//                    .forEach(es ->
-//                    sb.append(es.getKey()).append(": ").append(es.getValue()).append("%").append("\n"));
-//
-//            System.out.println(sb.toString());
+                    Optional.ofNullable(wordsMap.get(word)).ifPresent(set ->
+                    set.forEach(path -> {
+                        rangesMap.merge(path.getFileName().toString(), weight, (int1, int2) -> int1 + weight);
+                })));
 
             return rangesMap.entrySet()
                     .stream()
