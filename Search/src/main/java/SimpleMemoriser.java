@@ -118,7 +118,8 @@ public class SimpleMemoriser implements Memoriser {
 
             return rangesMap.entrySet()
                     .stream()
-                    .sorted((o1, o2) -> o2.getValue() - o1.getValue())
+                    .sorted((o1, o2) -> o1.getValue().intValue() != o2.getValue().intValue() ?
+                            o2.getValue() - o1.getValue(): o1.getKey().compareTo(o2.getKey()))
                     .limit(limit)
                     .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (i1, i2) -> i2, LinkedHashMap::new));
         };
