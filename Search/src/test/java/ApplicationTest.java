@@ -2,7 +2,7 @@ import org.junit.Test;
 
 public class ApplicationTest {
 
-    @Test (expected = AssertionError.class)
+    @Test (expected = IllegalArgumentException.class)
     public void applicationCreation() {
 
         new Application(null);

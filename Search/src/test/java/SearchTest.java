@@ -4,7 +4,7 @@ import java.io.ByteArrayOutputStream;
 
 public class SearchTest {
 
-    @Test(expected = AssertionError.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testApplication() {
         new Application(null).start();
         new Application(new SimpleMemoriser(), null, 10).start();
