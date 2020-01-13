@@ -12,7 +12,7 @@ import javax.servlet.annotation.WebServlet;
  *         <p>
  *         Описание курса и лицензия: https://github.com/vitaly-chibrikov/stepic_java_webserver
  */
-@WebServlet(name = "WebSocketChatServlet", urlPatterns = {"/chat"})
+@WebServlet(name = "WebSocketChatServlet", urlPatterns = {"/main/java"})
 public class WebSocketChatServlet extends WebSocketServlet {
     private final static int LOGOUT_TIME = 10 * 60 * 1000;
     private final ChatService chatService;
