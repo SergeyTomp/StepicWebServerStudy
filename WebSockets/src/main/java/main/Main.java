@@ -28,7 +28,7 @@ public class Main {
         if (f == null) { throw new RuntimeException("Unable to find resource directory");}
         URI webRootUri = f.toURI();
 
-        context.addServlet(new ServletHolder(new WebSocketChatServlet()), "/main/java");
+        context.addServlet(new ServletHolder(new WebSocketChatServlet()), "/chat");
 
         context.setContextPath("/");
         context.setBaseResource(Resource.newResource(webRootUri));
